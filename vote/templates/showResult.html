@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load static %}
+{% load index %}
+
+    {% block content3 %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/jquery.circliful.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js'></script>
+
+    {% endblock %}
+
+		<!-- Add content here -->
+    {% block content %}
+
+    <h1 class="fonty">RESULT</h1>
+    <div class="panel panel-default" style="border-radius: 10px; border: 2px solid #ede9e5; padding: 20px; ">
+      <div class="panel-body">
+        {% for value in name %}
+            {% if forloop.counter0|divisibleby:4 %}
+            <div class="row">
+            {% endif %}
+            <div class="col-sm-3">
+                <div id="test-circle{{forloop.counter0}}" style="width:300 ; height:200"></div>
+                <center><h3>{{value.candidate_name}}</center></h3>
+                <center><b>No. of votes</b>: {{ headcount|index:forloop.counter0 }} </center>
+                <center><b>Party Name</b>: {{value.party_name}} </center>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="border-radius: 10px; border: 2px solid #cac4c4;background-color: transparent; margin-bottom:10px;">
+      Results in details <span class="glyphicon glyphicon-chevron-down"></span>
+    </button>
+    <br>
+    <div class="panel panel-default collapse" id="collapseExample">
+      <div class="panel-body">
+        <div class="col-sm-6" style="width:50%;">
+          <canvas id="piechart" dropzone="copy" width="300" height="200" ></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById("piechart"), {
+            type: 'pie',
+            data: {
+              labels: [ {%for r in party1%}'{{party1|index:forloop.counter0}}',{%endfor%}
+                      ],
+              datasets: [{
+                  label: "Percentage voting",
+                  backgroundColor:["rgba(255, 99, 132,0.9)",'rgba(255, 206, 86, 0.9)','rgba(75, 192, 192, 0.9)','rgba(153, 102, 255, 0.9)','rgba(255, 159, 64, 0.9)',"rgba(55, 99, 132,0.9)"],
+                  data: {{partyper}},
+
+                }
+              ]
+            },
+            options: {
+              responsiveAnimationDuration: 2000,
+              animation: {
+                animateScale:true
+                },
+              title: {
+                display: true,
+                text: "Overall Result of Election(in%)"
+              }
+            }
+          });
+        </script>
+
+        <div class="col-sm-6" style="width:50%;">
+          <canvas id="piechart2" dropzone="copy" width="300" height="200" ></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById("piechart2"), {
+            type: 'pie',
+            data: {
+              labels: ["voters who vote","voters who don't vote"],
+              datasets: [{
+                  label: "Percentage voting",
+                  backgroundColor:["rgb(255, 99, 132)","rgb(55, 99, 132)",],
+                  data: {{voteper}},
+
+                }
+              ]
+            },
+            options: {
+              responsiveAnimationDuration: 2000,
+              animation: {
+                animateScale:true
+                },
+              title: {
+                display: true,
+                text: "Voting Percentage(in%)"
+              }
+            }
+          });
+        </script>
+        <br><br>
+
+        <table class="table table-hover" style="width:65%">
+          <br>
+        <h3>Winners of the Area<h3>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Area</th>
+              <th scope="col">Name</th>
+              <th scope="col">Party Name</th>
+              <th scope="col">Votes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for r in warea%}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{r}}</td>
+              {%for r1 in wvote%}
+                {%if forloop.parentloop.counter0 == forloop.counter0 %}
+                <td>{{r1.0.vid.candidate_name}}</td>
+                <td>{{r1.0.vid.party_name}}</td>
+                <td>{{r1.0.vote}}</td>
+                {%endif%}
+              {%endfor%}
+              </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+
+
+      </div>
+    </div>
+  </div>
+  </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+    {% endblock %}
+
+
+    {% block content2 %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.circliful.js' %}"></script>
+
+    <script>
+        $( document ).ready(function() { // 6,32 5,38 2,34
+          {%for r in per%}
+
+            $("#test-circle{{forloop.counter0}}").circliful({
+                animation: 1,
+                animationStep: 5,
+                foregroundBorderWidth: 15,
+                foregroundColor: "#3498DB",
+                backgroundBorderWidth: 15,
+                percent: {{ per|index:forloop.counter0 }},
+                textSize: 28,
+                textStyle: 'font-size: 12px;',
+                textColor: '#666',
+            });
+          {%endfor%}
+    		/*$("#test-circle1").circliful({
+                animation: 1,
+                animationStep: 5,
+                foregroundBorderWidth: 15,
+                foregroundColor: "#3498DB",
+                backgroundBorderWidth: 15,
+                percent: {{per.1}},
+                textSize: 28,
+                textStyle: 'font-size: 12px;',
+                textColor: '#666',
+            });
+    		$("#test-circle2").circliful({
+                animation: 1,
+                animationStep: 5,
+                foregroundBorderWidth: 15,
+                foregroundColor: "#3498DB",
+                backgroundBorderWidth: 15,
+                percent: {{per.2}},
+                textSize: 28,
+                textStyle: 'font-size: 12px;',
+                textColor: '#666',
+            });*/
+        });
+    </script>
+    {% endblock %}

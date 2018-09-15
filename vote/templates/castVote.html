@@ -1,0 +1,279 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content3 %}
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+
+		<style>
+
+		@keyframes button-loading {
+20% {
+	color: transparent;
+	transform: scale(1, 1);
+}
+40% {
+	border-color: #5585ff;
+	background-color: transparent;
+	transform: scale(1, 1);
+}
+60% {
+	transform: scale(0.7, 1.1);
+	margin-left: 1.25rem;
+	width: 2.5rem;
+	text-indent: -0.6125rem;
+	color: transparent;
+	border-color: #5585ff;
+	background-color: #5585ff;
+}
+80% {
+	transform: scale(1, 1);
+}
+100% {
+	margin-left: 1.25rem;
+	width: 5rem;
+	background-color: #5585ff;
+	border-color: #5585ff;
+	color: transparent;
+}
+}
+@keyframes button-dot-intro {
+0% {
+	opacity: 0;
+}
+60% {
+	opacity: 1;
+	transform: scale(1, 1);
+}
+100% {
+	transform: scale(0.75, 0.75);
+}
+}
+@keyframes button-dot-pulse {
+0% {
+	opacity: 1;
+	transform: scale(0.75, 0.75);
+}
+15% {
+	transform: scale(0.85, 0.85);
+}
+45% {
+	transform: scale(0.75, 0.75);
+}
+55% {
+	transform: scale(0.95, 0.95);
+}
+85% {
+	transform: scale(0.75, 0.75);
+}
+100% {
+	opacity: 1;
+	transform: scale(0.75, 0.75);
+}
+}
+@keyframes button-ready {
+0% {
+	margin-left: 1.25rem;
+	width: 5rem;
+}
+10% {
+	background-color: #5585ff;
+	border-color: #5585ff;
+}
+70% {
+	margin: 0;
+	width: 10.25rem;
+	background-color: #fff;
+	transform: scale(1.1, 1.1);
+}
+100% {
+	margin: 0;
+	width: 10rem;
+	border-color: #8cce1e;
+	background-color: #fff;
+}
+}
+@keyframes button-dot-outro {
+0% {
+	opacity: 1;
+}
+100% {
+	opacity: 0;
+	transform: scale(1, 1);
+}
+}
+@keyframes button-ready-label {
+0% {
+	opacity: 0;
+}
+100% {
+	opacity: 1;
+}
+}
+
+
+.button1 {
+position: relative;
+overflow: hidden;
+width: 10rem;
+color: #28a745;
+border: 2px solid #28a745;
+background-color: transparent;
+cursor: pointer;
+line-height: 2;
+margin: 0;
+padding: 0;
+border-radius: 1.5rem;
+font-size: 2.125rem;
+text-transform: capitalize;
+outline: transparent ;
+transition: transform .125s;
+}
+.button1:hover {
+	background-color: #3c763d;
+	color: white;
+
+}
+.button1:active {
+transform: scale(0.9, 0.9);
+}
+.button1:before, button:after {
+position: absolute;
+opacity: 0;
+border-radius: 50%;
+background-color: #fff;
+top: 50%;
+left: 50%;
+margin-top: -1.125rem;
+margin-left: -1.125rem;
+width: 2.25rem;
+height: 2.25rem;
+content: '';
+z-index: 1;
+}
+.button1.loading {
+animation: button-loading .5s forwards;
+}
+.button1.loading:before {
+opacity: 1;
+animation: button-dot-intro .5s forwards;
+}
+.button1.loading:after {
+opacity: 0;
+animation: button-dot-pulse 1.5s infinite .5s;
+}
+.button1.ready {
+text-indent: 0;
+color: transparent;
+background-color: #5585ff;
+animation: button-ready .333s forwards;
+}
+.button1.ready:before {
+position: absolute;
+left: 0;
+right: 0;
+top: auto;
+margin: 0;
+width: auto;
+height: auto;
+border-radius: 0;
+background-color: transparent;
+color: #8cce1e;
+content: 'Vote It';
+opacity: 0;
+z-index: 2;
+animation: button-ready-label .5s forwards .275s;
+}
+.button1.ready:after {
+opacity: 1;
+animation: button-dot-outro .333s;
+}
+
+	</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+
+<!-- Add content here -->
+<h1 class="fonty">Cast your vote</h1>
+<form action="/vote/castVote">{% csrf_token %}
+	{% for value in cc %}
+	<div class="panel panel-default">
+	  <div class="panel-body">
+			<div class='row' width='75%'>
+				<div class="col-sm-2" style="margin-top: auto; margin-bottom: auto;">
+					<h3>{{forloop.counter}}</h3>
+				</div>
+				<div class="col-sm-3" style="margin-top: auto; margin-bottom: auto;">
+					<h3>{{value.candidate_name}}</h3>
+				</div>
+				<div class="col-sm-3" style="margin-top: auto; margin-bottom: auto;">
+					<img src='/media/{{value.logo.name}}' class="img-thumbnail" alt="Cinque Terre" width="50%">
+				</div>
+				<div class="col-sm-2" style="margin-top: auto; margin-bottom: auto;">
+					{% if voteOnce %}
+						<button type="button" class="button1" data-toggle="modal" data-target="#myModal">{{ value.party_name }}</button>
+						<div id="myModal" class="modal fade" role="dialog">
+			  		<div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+							<h4 class="modal-title">Opps...Sorry!!</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			      <div class="modal-body">
+			        <p>thanks for your prcious vote,but you cannot vote again!</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+			      </div>
+			    	</div>
+
+			  		</div>
+					</div>
+
+					{% else %}
+						<button type="submit" class="button1" name = "candidate" value = "{{ value.cunm }}" data-dismiss="modal">{{ value.party_name }}</button>
+
+					{% endif %}
+					<!--<button type="submit" name = "candidate" value = "{{ value.cunm }}">{{ value.party_name }}</button>-->
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+<!--
+	<script >
+
+	document.querySelector('button').addEventListener('click',function clickHandler(e){
+
+			this.removeEventListener('click',clickHandler,false);
+
+			e.preventDefault();
+			var self = this;
+			setTimeout(function(){
+					self.className = 'button1 loading';
+			},125);
+
+			setTimeout(function(){
+					self.className = 'button1 ready';
+			},1000);
+
+	},false);
+	</script>
+-->
+
+</form>
+{% endblock %}

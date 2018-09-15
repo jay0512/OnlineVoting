@@ -1,0 +1,485 @@
+{% extends "base.html" %}
+{% load static %}
+{% load index %}
+
+{% block content3 %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js'></script>
+
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+</style>
+
+
+<h1 class="fonty">Welcome to AboutUs </h1>
+<br>
+<p>It is important to know who represent your area.
+  one can capable to solve your problems and be part of state's growth.
+  So here we come with details of your representative.So choose your candidate wisely</p>
+<br>
+<style>
+  /* Style the input field */
+  #myInput1 {
+    padding: 20px;
+    margin-top: -6px;
+    border: 0;
+    border-radius: 0;
+    background: #f1f1f1;
+  }
+</style>
+<br>
+<script>
+$(document).ready(function(){
+  $("#myInput1").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".dropdown-menu li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+<form action="/vote/AboutUs">{% csrf_token %}
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">select your Area</button>
+    <ul class="dropdown-menu">
+      <input class="form-control" id="myInput1" type="text" placeholder="Search..">
+      {% for area in state %}
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" name="city" value="{{area.area}}" class="btn-link" style="text-decoration: none;" >{{area.area}}</button></li>
+      {% endfor %}
+    </ul>
+</div>
+</form>
+<br>
+
+{% for value in candid %}
+<div class="panel panel-default" style="border-radius: 10px; border: 2px solid #ede9e5; padding: 20px; ">
+  <div class="panel-body">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab"  href="#{{ value.cunm }}1">Profile</a></li>
+      <li><a data-toggle="tab" href="#{{ value.cunm }}2">Rating</a></li>
+      <li><a data-toggle="tab" href="#{{ value.cunm }}3">Career</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="{{ value.cunm }}1" class="tab-pane fade in active">
+        <h3>{{ value.candidate_name }}</h3>
+        <div class="row">
+          <div class="col-sm-3">
+            <img src='/media/{{value.face.name}}' class="img-thumbnail" alt="Cinque Terre" style="width:220px">
+          </div>
+          <div class="col-sm-9 content_left">
+            <b>Party Name:</b><p>{{ value.party_name }}</p>
+            <b>Area:</b><p>{{ value.area }}</p>
+            <b>Date Of Birth:</b><p>{{ value.candidate_dob}}</p>
+            <b>Description:</b><br><p>{{ value.Description }}</p>
+          </div>
+        </div>
+      </div>
+      <div id="{{ value.cunm }}2" class="tab-pane fade">
+        <h3>Rating</h3>
+        <div style="width:50%;">
+          <canvas id="{{value.cunm}}chart2" dropzone="copy" width="300" height="200" ></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById("{{value.cunm}}chart2"), {
+            type: 'line',
+            data: {
+              labels:   {% autoescape off %}
+{{ratemonth|index:forloop.counter0}},
+{% endautoescape %}
+              datasets: [{
+                  data: {{ rate|index:forloop.counter0 }},
+                  label: "review",
+                  lineTension:0.01,
+                  borderColor: "#3e95cd",
+                  fill: true
+                }
+              ]
+            },
+            responsive:true,
+            options: {
+              responsiveAnimationDuration: 1000,
+              scales: {
+                          yAxes: [{
+                              ticks: {
+                                  beginAtZero: true
+                              }
+                          }]
+                      },
+              maintainAspectRatio: true,
+              responsive: true,
+              title: {
+                display: true,
+                text: "{{ value.candidate_name }}'s Rating"
+              }
+            }
+          });
+        </script>
+
+        </div>
+        <div id="{{ value.cunm }}3" class="tab-pane fade">
+          <h3>Career</h3>
+          <div style="width:50%;">
+            <canvas id="{{value.cunm}}chart" dropzone="copy" width="300" height="200" ></canvas>
+          </div>
+          <script>
+              new Chart(document.getElementById("{{value.cunm}}chart"), {
+              type: 'line',
+              data: {
+                labels: {{ voteyr|index:forloop.counter0 }},
+                datasets: [{
+                    data: {{ ratevote|index:forloop.counter0 }},
+                    label: "review",
+                    lineTension:0.01,
+                    borderColor: "#3e95cd",
+                    fill: true
+                  }
+                ]
+              },
+              responsive:true,
+              options: {
+                responsiveAnimationDuration: 1000,
+                scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                maintainAspectRatio: true,
+                responsive: true,
+                title: {
+                  display: true,
+                  text: "{{ value.candidate_name }}'s Rating"
+                }
+              }
+            });
+          </script>
+        </div>
+        <script>
+          $(".").click(function(){
+            if ($(this).hasClass('active')){
+              $('#' + this.hash.substr(1).toLowerCase()).toggleClass('active');
+          }
+          });
+        </script>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+<form autocomplete="off" action="/vote/AboutUs">{% csrf_token %}
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text" name="candidate1" placeholder="candidate name">
+  </div>
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput2" type="text" name="candidate2" placeholder="candidate name">
+  </div>
+  <input type="submit" value="Compare">
+</form>
+
+<script>
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+      });
+}
+
+/*An array containing all the country names in the world:*/
+var countries = [{% for i in candidlist %}'{{ i.candidate_name }}',{% endfor %}];
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+autocomplete(document.getElementById("myInput"), countries);
+autocomplete(document.getElementById("myInput2"), countries);
+</script>
+
+{%if compare%}
+<div class="panel panel-default" style="border-radius: 10px; border: 2px solid #ede9e5; padding: 20px; ">
+  <div class="panel-body">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab"  href="#jj">Profile</a></li>
+      <li><a data-toggle="tab" href="#xyz">Rating</a></li>
+      <li><a data-toggle="tab" href="#abc">Career</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="jj" class="tab-pane fade in active">
+        {%for value in candid1 %}
+        <h3>{{ value.candidate_name }}</h3>
+        <div class="row">
+          <div class="col-sm-3">
+            <img src='/media/{{value.face.name}}' class="img-thumbnail" alt="Cinque Terre" style="width:220px">
+          </div>
+          <div class="col-sm-9 content_left">
+            <b>Party Name:</b><p>{{ value.party_name }}</p>
+            <b>Area:</b><p>{{ value.area }}</p>
+            <b>Date Of Birth:</b><p>{{ value.candidate_dob}}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div id="xyz" class="tab-pane fade">
+        <h3>Rating</h3>
+        <div style="width:50%;">
+          <canvas id="chart2t" dropzone="copy" width="300" height="200" ></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById("chart2t"), {
+            type: 'line',
+            data: {
+              labels:   {% autoescape off %}
+{{ratemonth1.0}},
+{% endautoescape %}
+              datasets: [{
+                  data: {{rate1.0}},
+                  label: "{{candid1.0.candidate_name}}",
+                  lineTension:0.01,
+                  borderColor: "#3e95cd",
+                  fill: true
+                }
+              ,
+              {
+                  data: {{ rate1.1}},
+                  label: "{{candid1.1.candidate_name}}",
+                  lineTension:0.01,
+                  borderColor: "#ba2784",
+                  fill: true
+                }
+              ]
+            },
+            responsive:true,
+            options: {
+              responsiveAnimationDuration: 1000,
+              scales: {
+                          yAxes: [{
+                              ticks: {
+                                  beginAtZero: true
+                              }
+                          }]
+                      },
+              maintainAspectRatio: true,
+              responsive: true,
+              title: {
+                display: true,
+                text: "Compare The results"
+              }
+            }
+          });
+        </script>
+
+        </div>
+        <div id="abc" class="tab-pane fade">
+          <h3>Career</h3>
+          <div style="width:50%;">
+            <canvas id="chartt" dropzone="copy" width="300" height="200" ></canvas>
+          </div>
+          <script>
+              new Chart(document.getElementById("chartt"), {
+              type: 'line',
+              data: {
+                labels: {{ voteyr1.0}},
+                datasets: [{
+                    data: {{ ratevote1.0}},
+                    label: "{{candid1.0.candidate_name}}",
+                    lineTension:0.01,
+                    borderColor: "#3e95cd",
+                    fill: true
+                  }
+                ,{
+                    data: {{ ratevote1.1}},
+                    label: "{{candid1.1.candidate_name}}",
+                    lineTension:0.01,
+                    borderColor: "#ba2784",
+                    fill: true
+                  }
+                ],
+              },
+              responsive:true,
+              options: {
+                responsiveAnimationDuration: 1000,
+                scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                maintainAspectRatio: true,
+                responsive: true,
+                title: {
+                  display: true,
+                  text: "Compare The results"
+                }
+              }
+            });
+          </script>
+        </div>
+        <script>
+          $(".").click(function(){
+            if ($(this).hasClass('active')){
+              $('#' + this.hash.substr(1).toLowerCase()).toggleClass('active');
+          }
+          });
+        </script>
+    </div>
+  </div>
+</div>
+{% endif %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}

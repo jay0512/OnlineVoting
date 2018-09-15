@@ -1,0 +1,112 @@
+	<!-- Add content here -->
+	{% extends "base.html" %}
+
+	{% block content %}
+	<h1 class="fonty">Welcome to Monthly Question-Answer </h1>
+	<br>
+	<p>It is important for your states Growth.This is for your candidate and his work</p>
+	<br>
+	<br>
+		<h3>Q. {{que}}</h3><br>
+		<body>
+	<style>
+			.container {
+			    display: block;
+			    position: relative;
+			    padding-left: 35px;
+			    margin-bottom: 15px;
+			    cursor: pointer;
+			    font-size: 18px;
+			    -webkit-user-select: none;
+			    -moz-user-select: none;
+			    -ms-user-select: none;
+			    user-select: none;
+			}
+
+			/* Hide the browser's default radio button */
+			.container input {
+			    position: absolute;
+			    opacity: 0;
+			    cursor: pointer;
+			}
+
+			/* Create a custom radio button */
+			.checkmark {
+			    position: absolute;
+			    top: 0;
+			    left: 0;
+			    height: 25px;
+			    width: 25px;
+			    background-color: #eee;
+			    border-radius: 50%;
+			}
+
+			/* On mouse-over, add a grey background color */
+			.container:hover input ~ .checkmark {
+			    background-color: #ccc;
+			}
+
+			/* When the radio button is checked, add a blue background */
+			.container input:checked ~ .checkmark {
+			    background-color: #2196F3;
+			}
+
+			/* Create the indicator (the dot/circle - hidden when not checked) */
+			.checkmark:after {
+			    content: "";
+			    position: absolute;
+			    display: none;
+			}
+
+			/* Show the indicator (dot/circle) when checked */
+			.container input:checked ~ .checkmark:after {
+			    display: block;
+			}
+
+			/* Style the indicator (dot/circle) */
+			.container .checkmark:after {
+			  top: 9px;
+			  left: 9px;
+			  width: 8px;
+			  height: 8px;
+			  border-radius: 50%;
+			  background: white;
+			}
+</style>
+		<form action="/question/review">{% csrf_token %}
+			{% for value in cand %}
+				<label class="container">{{ value.candidate_name }}<br>
+					<input type="radio" name="candidate" checked="checked" value = "{{ value.cunm }}" class="sr-only" >
+					<span class="checkmark"></span>
+				</label>
+				 <!--<input type="radio" name = "candidate" value = "{{ value.cunm }}" required>{{ value.candidate_name }}<br>-->
+			{% endfor %}
+
+		<br>
+		{% if answered %}
+			<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">vote</button>
+			<div id="myModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+				<h4 class="modal-title">Opps...Sorry!!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>thanks for your prcious review,but you cannot review again!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    	</div>
+
+  		</div>
+		</div>
+
+		{% else %}
+			<button type="submit" class="btn btn-info btn-lg" data-dismiss="modal">Vote</button>
+
+		{% endif %}
+{% endblock %}
