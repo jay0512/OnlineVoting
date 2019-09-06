@@ -12,6 +12,7 @@ class Voter(models.Model):
     area = models.CharField(max_length=100)
     flag= models.IntegerField()
     flag1=models.IntegerField()
+    verified = models.BooleanField(default=False)
 
 
 class Candidate(models.Model):
@@ -25,5 +26,6 @@ class Candidate(models.Model):
     Description = models.CharField(max_length=1000 , blank=True)
     logo = models.ImageField(upload_to="img0" ,blank=True)
     face = models.ImageField(upload_to="img1" ,blank=True)
+    verified = models.BooleanField(default=False)
 
     #flag= models.IntegerField()
