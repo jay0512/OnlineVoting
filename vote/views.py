@@ -52,6 +52,14 @@ def vote1(request):
     #can={'cand':li}
     q1['cc']=li
     #c.update(can)
+    
+    user=Voter.objects.get(vunm=x)
+    if user.verified :
+        dict={'verified':True}
+        q1.update(dict)
+    q1.update(csrf(request))
+    return render_to_response('castVote.html', q1)
+    
     user=Voter.objects.get(vunm=x)
     if user.flag :
         dict={'voteOnce':True}
