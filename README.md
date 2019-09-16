@@ -36,6 +36,9 @@ install pillow
    
 
 to run server ,activate virtual environment then navigate to the project directory
+
  -------venv\scripts\activate
+ 
  -------(venv) C:\Project> cd OnlineVoting-Master
+ 
  --------------(venv) C:Project\OnlineVoting-Master>python manage.py runserver
