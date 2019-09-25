@@ -1,1 +1,2 @@
+pillow
 django-bootstrap3
