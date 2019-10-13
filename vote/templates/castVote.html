@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "base1.html" %}
 {% load static %}
 
 {% block content3 %}
@@ -222,6 +222,22 @@ animation: button-dot-outro .333s;
 					<img src='/media/{{value.logo.name}}' class="img-thumbnail" alt="Cinque Terre" width="50%">
 				</div>
 				<div class="col-sm-2" style="margin-top: auto; margin-bottom: auto;">
+				{% if not verified %}
+
+					 <!-- Modal content-->
+					 <div class="modal-content">
+							<div class="modal-header">
+									  <h4 class="modal-title">Opps...Sorry!!</h4>
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+							  <p>You are not a verified voter</p>
+							</div>
+							<div class="modal-footer">
+							  <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+							</div>
+							  </div>
+				 {% else %}
 					{% if voteOnce %}
 						<button type="button" class="button1" data-toggle="modal" data-target="#myModal">{{ value.party_name }}</button>
 						<div id="myModal" class="modal fade" role="dialog">
@@ -248,6 +264,7 @@ animation: button-dot-outro .333s;
 						<button type="submit" class="button1" name = "candidate" value = "{{ value.cunm }}" data-dismiss="modal">{{ value.party_name }}</button>
 
 					{% endif %}
+				{% endif %}	
 					<!--<button type="submit" name = "candidate" value = "{{ value.cunm }}">{{ value.party_name }}</button>-->
 				</div>
 			</div>
