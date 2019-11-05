@@ -3,6 +3,10 @@ https://youtu.be/1Rge29HwGpo
 
     windows 7,8,10 etc
 
+MAKE SURE TO RUN  A DATABASE SYNC AFTER STARTING THE SERVER
+THIS PROJECT STORES PASSWORDS IN RAW FORM (IN THE VOTERS MODULE) THEREFORE NOT SUITABLE FOR USE IN A PRODUCTION ENVIRONMENT. HOWEVER IT WOULD BE WISE TO IMPLEMENT THE USE DJANGO-FORMS WHEN CORRECTING SUCH DATA TO ENHANCE DATA SECURITY.
+
+
 first download and install  python 3.0 and above framework on your computer 
   and confirm whether the python path has been configured by typing python on a command prompt
 
