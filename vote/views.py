@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.contrib import auth
@@ -23,13 +23,13 @@ def home(request):
         dict={'invalid':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
         #return HttpResponseRedirect('/loginmodule/login/')
     p={'user1':request.session['user']}
     q1.update(p)
     print(p)
     q1.update(csrf(request))
-    return render_to_response('home.html', q1)
+    return render(request,'home.html', q1)
 
 def vote1(request):
     q1={}
@@ -41,7 +41,7 @@ def vote1(request):
         dict={'invalid':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
         #return HttpResponseRedirect('/loginmodule/login/')
     q1.update(csrf(request))
     area=Voter.objects.get(vunm=x)
@@ -53,19 +53,16 @@ def vote1(request):
     q1['cc']=li
     #c.update(can)
     
+    
     user=Voter.objects.get(vunm=x)
     if user.verified :
         dict={'verified':True}
         q1.update(dict)
+        if user.flag :
+            dict={'voteOnce':True}
+            q1.update(dict)
     q1.update(csrf(request))
-    return render_to_response('castVote.html', q1)
-    
-    user=Voter.objects.get(vunm=x)
-    if user.flag :
-        dict={'voteOnce':True}
-        q1.update(dict)
-    q1.update(csrf(request))
-    return render_to_response('castVote.html', q1)
+    return render(request,'castVote.html', q1)
 
 def castVote(request):
     q1={}
@@ -77,7 +74,7 @@ def castVote(request):
         dict1={'invalid':True}
         q1.update(dict1)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
         #return HttpResponseRedirect('/loginmodule/login/')
     q1.update(csrf(request))
 
@@ -92,7 +89,7 @@ def castVote(request):
     x.save()
     val.flag=1
     val.save()
-    return render_to_response('thnxVote.html', q1)
+    return render(request,'thnxVote.html', q1)
 
 #def showResult(request):
 #    q1={}
@@ -126,7 +123,7 @@ def result(request):
         dict={'invalid':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
         #return HttpResponseRedirect('/loginmodule/login/')
 
     date =Election.objects.latest('Edate').Edate
@@ -172,13 +169,13 @@ def result(request):
     q1['wvote']=j
 
     q1.update(csrf(request))
-    return render_to_response('showResult.html', q1)
+    return render(request,'showResult.html', q1)
 
 def logout(request):
     q1={}
     q1.update(csrf(request))
     del request.session['user']
-    return render_to_response('Login1.html',q1)
+    return render(request,'Login1.html',q1)
 
 def AboutUs(request):
     q1={}
@@ -190,7 +187,7 @@ def AboutUs(request):
         dict={'invalid':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
 
     state=list(Candidate.objects.values('area').distinct())
     q1['state']=state
@@ -305,4 +302,4 @@ def AboutUs(request):
         q1['voteyr1']=y2
     q1['candidlist']=can
     q1.update(csrf(request))
-    return render_to_response('AboutUs.html', q1)
+    return render(request,'AboutUs.html', q1)
