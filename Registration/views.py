@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.template.context_processors import csrf
@@ -13,7 +13,7 @@ from datetime import timedelta
 def register(request):
     p = {}
     p.update(csrf(request))
-    return render_to_response('registration1.html', p)
+    return render(request,'registration1.html', p)
 
 def auth(request):
 
@@ -31,7 +31,7 @@ def auth(request):
         dict={'repeat':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('registration1.html', q1)
+        return render(request,'registration1.html', q1)
 
 
     today=datetime.date.today()
@@ -45,7 +45,7 @@ def auth(request):
             dict={'age':True}
             q1.update(dict)
             q1.update(csrf(request))
-            return render_to_response('registration1.html', q1)
+            return render(request,'registration1.html', q1)
 
         if diff>=18 :
             s = Voter(vunm = username ,vpass = password , voter_name = name  , voter_dob = dob , gender = gender , area=area ,flag = 0 ,flag1=0)
