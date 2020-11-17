@@ -1,4 +1,3 @@
-from django.shortcuts import render_to_response
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.contrib import auth
@@ -9,7 +8,7 @@ from Registration.models import Voter,Candidate
 def login(request):
     q1 = {}
     q1.update(csrf(request))
-    return render_to_response('Login1.html', q1)
+    return render(request,'Login1.html', q1)
 def auth_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
@@ -27,7 +26,7 @@ def auth_view(request):
         dict={'wrong':True}
         q1.update(dict)
         q1.update(csrf(request))
-        return render_to_response('Login1.html', q1)
+        return render(request,'Login1.html', q1)
 
 #def invalidlogin(request):
 #    return render_to_response('invalidlogin.html')
